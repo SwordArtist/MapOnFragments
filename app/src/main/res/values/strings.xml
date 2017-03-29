@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MapOnFragments</string>
-    <string name="title_home">Home</string>
+    <string name="title_simple_map">Simple Map</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 </resources>
