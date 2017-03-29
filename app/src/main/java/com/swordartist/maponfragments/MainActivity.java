@@ -18,8 +18,10 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_simple_map:
+                    updateFragmentPlaceHolder(SimpleMapFragment.newInstance());
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_search_map:
+                    updateFragmentPlaceHolder(SearchMapFragment.newInstance());
                     return true;
                 case R.id.navigation_notifications:
                     return true;
@@ -36,16 +38,18 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        
+
         // Set initial fragment on the fragment place holder
         updateFragmentPlaceHolder(SimpleMapFragment.newInstance());
     }
-    
-    
+
+
     private void updateFragmentPlaceHolder(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (SimpleMapFragment.class == fragment.getClass()) {
+            fragmentTransaction.replace(R.id.fragment_place_holder, fragment).commit();
+        } else if (SearchMapFragment.class == fragment.getClass()) {
             fragmentTransaction.replace(R.id.fragment_place_holder, fragment).commit();
         }
     }
