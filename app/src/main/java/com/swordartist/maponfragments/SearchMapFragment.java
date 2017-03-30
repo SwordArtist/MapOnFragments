@@ -2,14 +2,16 @@ package com.swordartist.maponfragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -25,7 +27,7 @@ public class SearchMapFragment extends Fragment implements OnMapReadyCallback, P
 
     private View rootView;
     private MapView mapView;
-    private PlaceAutocompleteFragment autocompleteFragment;
+    private SupportPlaceAutocompleteFragment autocompleteFragment;
 
     public SearchMapFragment() {
         // Required empty public constructor
@@ -58,14 +60,19 @@ public class SearchMapFragment extends Fragment implements OnMapReadyCallback, P
         // Initialize the map
         MapsInitializer.initialize(this.getActivity());
 
-        // Retrieve the PlaceAutocompleteFragment.
-        autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-        // Register a listener to receive callbacks when a place has been selected or an error has
-        // occurred.
+        // 
+        autocompleteFragment = new SupportPlaceAutocompleteFragment();
         autocompleteFragment.setOnPlaceSelectedListener(this);
 
+        updateAutoCompleteFragmentPlaceHolder(autocompleteFragment);
+
         return rootView;
+    }
+
+    private void updateAutoCompleteFragmentPlaceHolder(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.autocomplete_fragment_place_holder, fragment).commit();
     }
 
     @Override
@@ -78,7 +85,7 @@ public class SearchMapFragment extends Fragment implements OnMapReadyCallback, P
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        getActivity().getFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
     }
 
     @Override
@@ -105,7 +112,7 @@ public class SearchMapFragment extends Fragment implements OnMapReadyCallback, P
 
     @Override
     public void onPlaceSelected(Place place) {
-
+        
     }
 
     @Override
