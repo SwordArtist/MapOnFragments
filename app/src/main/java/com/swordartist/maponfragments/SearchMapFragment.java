@@ -6,6 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -17,10 +21,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
  * Use the {@link SearchMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchMapFragment extends Fragment implements OnMapReadyCallback {
+public class SearchMapFragment extends Fragment implements OnMapReadyCallback, PlaceSelectionListener {
 
     private View rootView;
     private MapView mapView;
+    private PlaceAutocompleteFragment autocompleteFragment;
 
     public SearchMapFragment() {
         // Required empty public constructor
@@ -53,6 +58,13 @@ public class SearchMapFragment extends Fragment implements OnMapReadyCallback {
         // Initialize the map
         MapsInitializer.initialize(this.getActivity());
 
+        // Retrieve the PlaceAutocompleteFragment.
+        autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // Register a listener to receive callbacks when a place has been selected or an error has
+        // occurred.
+        autocompleteFragment.setOnPlaceSelectedListener(this);
+
         return rootView;
     }
 
@@ -66,6 +78,7 @@ public class SearchMapFragment extends Fragment implements OnMapReadyCallback {
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        getActivity().getFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
     }
 
     @Override
@@ -87,6 +100,16 @@ public class SearchMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+    }
+
+    @Override
+    public void onPlaceSelected(Place place) {
+
+    }
+
+    @Override
+    public void onError(Status status) {
 
     }
 }
